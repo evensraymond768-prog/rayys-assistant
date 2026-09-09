@@ -91,8 +91,10 @@
     $('rayySignOut').onclick=async()=>{await supa.auth.signOut();authStatus('Signed out')};
   }
   function authStatus(t){const x=$('rayyAuthStatus');if(x)x.textContent=t}
-  async function startCloud(client){
-    if(!client||supa)return;supa=client;injectAuthUI();
+  async function startCloud(namespace){
+    if(!namespace||supa)return;
+    supa=namespace.createClient(SUPA_URL,SUPA_KEY);
+    injectAuthUI();
     const {data:sessionData}=await supa.auth.getSession();await onSession(sessionData?.session||null);
     supa.auth.onAuthStateChange((_e,session)=>setTimeout(()=>onSession(session),0));
   }
