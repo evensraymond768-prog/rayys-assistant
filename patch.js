@@ -36,9 +36,11 @@
     cols.forEach((col,i)=>[...col.querySelectorAll('.scheduleBlock:not([data-overnight-clone])')].forEach(b=>{
       const t=b.querySelector('.blockTime')?.textContent||'';const m=t.match(/(\d{1,2}:\d{2})[–-](\d{1,2}:\d{2})/);if(!m||mins(m[2])>mins(m[1]))return;
       b.style.height=Math.max(28,((1440-mins(m[1]))/30)*30-3)+'px';
-      if(i<cols.length-1&&!b.nextElementSibling?.dataset?.overnightClone){const c=b.cloneNode(true);c.dataset.overnightClone='1';c.style.top='0px';c.style.height=Math.max(28,(mins(m[2])/30)*30-3)+'px';c.querySelector('.blockTime').textContent='12:00 AM–'+m[2];c.onclick=null;cols[i+1].appendChild(c);}
+      if(i<cols.length-1&&!b.nextElementSibling?.dataset?.overnightClone){const c=b.cloneNode(true);c.dataset.overnightClone='1';c.style.top='0px';c.style.height=Math.max(28,(mins(m[2])/30)*30-3)+'px';c.removeAttribute('onclick');cols[i+1].appendChild(c);}
     }));
   }
   new MutationObserver(fixOvernightBlocks).observe(document.body,{childList:true,subtree:true});
+  const addCore=$('addCore');if(addCore)addCore.addEventListener('click',()=>setTimeout(()=>{window.__rayyCoreId=null;bind()},0));
+  const addEvent=$('addEvent');if(addEvent)addEvent.addEventListener('click',()=>setTimeout(()=>{window.__rayyEventId=null;bind()},0));
   bind();setTimeout(bind,50);setTimeout(fixOvernightBlocks,120);
 })();
